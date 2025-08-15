@@ -1,0 +1,58 @@
+@import "tailwindcss";
+
+/* @keyframes swipe-down {
+  0% { transform: translateY(-40px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+.animate-swipe-down {
+  animation: swipe-down 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes swipe-up {
+  0% { transform: translateY(40px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+.animate-swipe-up {
+  animation: swipe-up 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes fade-in {
+                    from { opacity: 0; transform: translateY(10px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+
+                @keyframes fade-out {
+                    from { opacity: 1; transform: scale(1); }
+                    to { opacity: 0; transform: scale(0.95); }
+                }
+
+                @keyframes swipe-down {
+                    0% { transform: translateY(0) scale(1); }
+                    25% { transform: translateY(-5px) scale(1.02); }
+                    50% { transform: translateY(10px) scale(0.98); }
+                    75% { transform: translateY(-2px) scale(1.01); }
+                    100% { transform: translateY(0) scale(1); }
+                }
+
+                @keyframes swipe-up {
+                    0% { transform: translateY(0) scale(1); }
+                    25% { transform: translateY(5px) scale(1.02); }
+                    50% { transform: translateY(-10px) scale(0.98); }
+                    75% { transform: translateY(2px) scale(1.01); }
+                    100% { transform: translateY(0) scale(1); }
+                }
+
+                .animate-fade-in {
+                    animation: fade-in 0.3s ease-out;
+                }
+
+                .animate-fade-out {
+                    animation: fade-out 0.3s ease-in forwards;
+                }
+
+                .animate-swipe-down {
+                    animation: swipe-down 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+                }
+
+                .animate-swipe-up {
+                    animation: swipe-up 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+                } */

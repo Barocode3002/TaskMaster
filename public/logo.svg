@@ -1,0 +1,62 @@
+<!-- TaskMaster (Todo List App) – Red Gradient Icon -->
+<svg width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="title desc" xmlns="http://www.w3.org/2000/svg">
+  <title id="title">TaskMaster App Icon</title>
+  <desc id="desc">Rounded square red gradient background with a white card and a red checkmark badge.</desc>
+
+  <defs>
+    <!-- Background gradient (red tones) -->
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FF6B6B"/>
+      <stop offset="50%" stop-color="#F43F5E"/>
+      <stop offset="100%" stop-color="#BE123C"/>
+    </linearGradient>
+
+    <!-- Soft inner shadow for the card -->
+    <filter id="cardShadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#000" flood-opacity="0.18"/>
+    </filter>
+
+    <!-- Floating badge shadow -->
+    <filter id="badgeShadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#000" flood-opacity="0.25"/>
+    </filter>
+
+    <!-- Subtle highlight -->
+    <radialGradient id="gloss" cx="30%" cy="20%" r="60%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.35"/>
+      <stop offset="60%" stop-color="#FFFFFF" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Rounded-square (app icon shape) -->
+  <rect x="16" y="16" width="480" height="480" rx="104" fill="url(#bg)"/>
+  <rect x="16" y="16" width="480" height="480" rx="104" fill="url(#gloss)"/>
+
+  <!-- White checklist card -->
+  <g filter="url(#cardShadow)">
+    <rect x="96" y="118" width="320" height="276" rx="28" fill="#FFFFFF"/>
+  </g>
+
+  <!-- Card header strip -->
+  <rect x="96" y="118" width="320" height="56" rx="28" fill="#FDE2E2"/>
+
+  <!-- Three todo rows (bullet + line) -->
+  <g fill="none" stroke-linecap="round">
+    <!-- Row 1 -->
+    <circle cx="140" cy="210" r="10" fill="#FECACA"/>
+    <line x1="168" y1="210" x2="380" y2="210" stroke="#FCA5A5" stroke-width="12"/>
+    <!-- Row 2 -->
+    <circle cx="140" cy="258" r="10" fill="#FECACA"/>
+    <line x1="168" y1="258" x2="360" y2="258" stroke="#FCA5A5" stroke-width="12"/>
+    <!-- Row 3 -->
+    <circle cx="140" cy="306" r="10" fill="#FECACA"/>
+    <line x1="168" y1="306" x2="340" y2="306" stroke="#FCA5A5" stroke-width="12"/>
+  </g>
+
+  <!-- Completion badge (deep red circle with white check) -->
+  <g filter="url(#badgeShadow)" transform="translate(322, 274)">
+    <circle cx="0" cy="0" r="56" fill="#DC2626"/>
+    <path d="M-24 2 l16 16 l32 -36" fill="none" stroke="#FFFFFF" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

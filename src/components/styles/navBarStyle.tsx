@@ -1,0 +1,11 @@
+export const navBarContainer = "bg-red-700 text-white px-6 py-4 flex justify-between items-center shadow-lg";
+export const appName = "text-2xl font-bold tracking-wide";
+export const navBarButton = "bg-white text-purple-700 px-4 py-2 rounded hover:bg-purple-100 font-medium";
+export const modalOverlay = "fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50";
+export const modalContainer = "bg-white rounded-lg p-6 shadow-xl w-full max-w-md";
+export const modalTitle = "text-xl font-bold mb-4 text-purple-700";
+export const modalNoDeleted = "text-gray-500 mb-4";
+export const modalList = "mb-4";
+export const modalListItem = "mb-2 text-gray-800";
+export const modalButtonClose = "px-4 py-2 bg-purple-700 text-white rounded hover:bg-purple-800";
+export const modalButtonClear = "px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700";
