@@ -79,7 +79,7 @@ function NameInputScreen({ onNameSaved, onNavigateToTodos }: NameInputScreenProp
   if (isReturningUser) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 dark:bg-gray-900">
-        <div className={styles.cardContainer}>
+        <div className={styles.returningCard}>
           <div className={styles.inputIconContainer}>
             <CheckCircle2 className="w-8 h-8 text-green-600" />
           </div>

@@ -231,8 +231,8 @@ function TodoUI({ userName, onResetApp, onRestoreTodo }: TodoScreenProps) { // M
 
   const renderFilterTabs = () => // Tabs for filter switching
     todos.length > 0 && (
-      <div className="px-3 sm:px-6 py-3 border-b border-gray-200 bg-white dark:bg-slate-800 dark:border-slate-600">
-        <div className="flex rounded-lg bg-gray-100 p-1 dark:bg-slate-700">
+      <div className="px-3 sm:px-6 py-3 border-b border-gray-200 bg-white dark:bg-red-950 dark:border-red-700">
+        <div className="flex rounded-lg bg-gray-100 p-1 dark:bg-red-900">
           {(['all', 'active', 'completed'] as const).map((option) => (
             <button
               key={option}
@@ -240,8 +240,8 @@ function TodoUI({ userName, onResetApp, onRestoreTodo }: TodoScreenProps) { // M
               className={`
                 flex-1 px-2 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-md transition-colors
                 ${filter === option 
-                  ? 'bg-white text-gray-900 shadow-sm dark:bg-slate-600 dark:text-white' 
-                  : 'text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white'
+                  ? 'bg-white text-gray-900 shadow-sm dark:bg-red-700 dark:text-white' 
+                  : 'text-gray-600 hover:text-gray-900 dark:text-red-200 dark:hover:text-white'
                 }
               `}
             >

@@ -13,10 +13,10 @@ export const resetTextSmall = "sm:hidden";
 
 // Filter Styles
 export const filterContainer = "px-3 sm:px-6 py-2 bg-white dark:bg-stone-800";
-export const filterTabs = "flex rounded-lg bg-gray-100 p-1 dark:bg-stone-700";
+export const filterTabs = "flex rounded-lg bg-red-50 p-1 dark:bg-red-900/20 border border-red-100 dark:border-red-800/30";
 export const filterButton = "flex-1 px-2 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-md transition-colors cursor-pointer";
-export const filterButtonActive = "bg-white text-gray-900 shadow-sm dark:bg-stone-600 dark:text-stone-200 cursor-pointer";
-export const filterButtonInactive = "text-gray-600 hover:text-gray-900 dark:text-stone-300 dark:hover:text-stone-100 cursor-pointer";
+export const filterButtonActive = "bg-red-600 text-white shadow-sm dark:bg-red-700 dark:text-white cursor-pointer";
+export const filterButtonInactive = "text-red-700 hover:text-red-900 hover:bg-red-100 dark:text-red-300 dark:hover:text-red-200 dark:hover:bg-red-800/30 cursor-pointer";
 
 // Add Todo Form Styles
 export const addTodoForm = "";
