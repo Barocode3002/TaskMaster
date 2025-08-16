@@ -72,6 +72,7 @@ function App() {
 
   // Handle todo restoration from NavBarUI
   const handleRestoreTodo = (todo: Todo) => {
+    console.log('Restoring todo:', todo);
     if (restoreTodoRef.current) {
       restoreTodoRef.current(todo);
     }
