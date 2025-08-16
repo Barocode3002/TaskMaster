@@ -1,50 +1,13 @@
 import { useState, useEffect, useCallback, useRef } from 'react'; // React hooks for state, lifecycle, memoized callbacks, and DOM refs
-import { Plus, Trash2, CheckCircle, Circle, Calendar, RotateCcw, Edit2, Check, X } from 'lucide-react'; // Icons from lucide-react
+import { Plus, RotateCcw } from 'lucide-react'; // Icons from lucide-react
 
 import { type TodoScreenProps, type Todo } from '../utils/types'; // Types for props and todo object
 import { saveTodos, loadTodos } from '../utils/todoStorage'; // Local storage save/load functions
 import { addRecentlyDeletedTodo } from '../utils/recentlyDeletedStorage'; // Local storage for recently deleted todos
+import SwipeableTodoItem from './SwipeableTodoItem'; // Mobile-responsive todo item with swipe gestures
+import * as styles from './styles/todoUIStyle';
 
-// Importing all styles from todoStyle
-import {
-  screenBg,
-  mainContainer, 
-  card, 
-  headerRow, 
-  headerTitle, 
-  headerStats, 
-  resetButton,
-  addInputRow, 
-  addInput, 
-  addButton, 
-  filterTabsRow, 
-  filterTabActive, 
-  filterTabInactive,
-  filterTabActiveCount, 
-  filterTabCompletedCount, 
-  todoList, 
-  todoItemCompleted,
-  todoItemActive, 
-  todoToggleCompleted, 
-  todoToggleActive, 
-  todoTextCompleted,
-  todoTextActive, 
-  todoMeta, 
-  deleteButton, 
-  footerActions, 
-  footerText, 
-  footerClearButton,
-  storageInfo, 
-  editInput, 
-  editButton, 
-  swipeDownCompleted, 
-  swipeUpActive, 
-  fadeOut,
-} from './styles/todoStyle';
-
-const someStyles = {
-  EditBtn: "p-2 text-gray-400 hover:text-green-600 hover:bg-blue-100 rounded-lg transition-all duration-200 opacity-0 group-hover:opacity-100" // Tailwind class for edit button hover style
-};
+// Note: Styles are now handled directly in JSX for better mobile responsiveness
 
 function TodoUI({ userName, onResetApp, onRestoreTodo }: TodoScreenProps) { // Main TodoUI component
   const [todos, setTodos] = useState<Todo[]>([]); // State for todo list
@@ -82,7 +45,8 @@ function TodoUI({ userName, onResetApp, onRestoreTodo }: TodoScreenProps) { // M
     [autoSave]
   );
 
-  const addTodo = () => { // Add a new todo
+  const addTodo = (e?: React.FormEvent) => { // Add a new todo
+    if (e) e.preventDefault(); // Prevent form submission reload
     if (!newTodo.trim()) return; // Prevent adding empty
     const todo: Todo = { // Create todo object
       id: Date.now(), // Unique ID
@@ -112,7 +76,7 @@ function TodoUI({ userName, onResetApp, onRestoreTodo }: TodoScreenProps) { // M
         newSet.delete(id);
         return newSet;
       }),
-      800 // Matches CSS animation time
+      300 // Reduced animation time
     );
   };
 
@@ -208,7 +172,6 @@ function TodoUI({ userName, onResetApp, onRestoreTodo }: TodoScreenProps) { // M
   });
 
   const completedCount = todos.filter((t) => t.completed).length; // Count completed todos
-  const activeCount = todos.length - completedCount; // Count active todos
 
   const formatDate = (dateString: string) => { // Format date string
     try {
@@ -220,9 +183,9 @@ function TodoUI({ userName, onResetApp, onRestoreTodo }: TodoScreenProps) { // M
 
   if (isLoading) { // Loading screen
     return (
-      <div className={screenBg}>
-        <div className={`${card} text-center`}>
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mx-auto mb-4" /> {/* Spinner */}
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-100 px-2 sm:px-4 py-4 sm:py-8 flex items-center justify-center">
+        <div className="bg-white rounded-lg sm:rounded-2xl shadow-xl p-6 sm:p-8 text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mx-auto mb-4" />
           <p className="text-gray-600 animate-pulse">Loading your todos...</p>
         </div>
       </div>
@@ -245,177 +208,119 @@ function TodoUI({ userName, onResetApp, onRestoreTodo }: TodoScreenProps) { // M
     );
 
   const renderTodoItem = (todo: Todo) => { // Render a single todo
-    const animationClass = animatingIds.has(todo.id) // Animation for toggle
-      ? todo.completed
-        ? swipeDownCompleted
-        : swipeUpActive
-      : '';
-    const fadeClass = deletingIds.has(todo.id) ? fadeOut : ''; // Animation for delete
-
     return (
-      <div
+      <SwipeableTodoItem
         key={todo.id}
-        data-todo-id={todo.id}
-        className={`${todo.completed ? todoItemCompleted : todoItemActive} ${animationClass} ${fadeClass}`} // Conditional styles
-      >
-        <button
-          onClick={() => toggleTodo(todo.id)}
-          className={todo.completed ? todoToggleCompleted : todoToggleActive}
-          aria-label={todo.completed ? 'Mark as incomplete' : 'Mark as complete'}
-        >
-          {todo.completed ? (
-            <CheckCircle className="w-6 h-6" /> // Completed icon
-          ) : (
-            <Circle className="w-6 h-6" /> // Incomplete icon
-          )}
-        </button>
-
-        {editingId === todo.id ? ( // If in edit mode
-          <div ref={editRef} className="flex-1 flex items-center gap-2">
-            <input
-              value={editText}
-              onChange={(e) => setEditText(e.target.value)}
-              onKeyDown={handleEditKeyDown}
-              className={`${editInput} flex-1`}
-              autoFocus
-              aria-label="Edit todo text"
-            />
-            <button
-              onClick={saveEdit}
-              className={`${editButton} text-green-600`}
-              aria-label="Save changes"
-            >
-              <Check className="w-4 h-4" /> {/* Save icon */}
-            </button>
-            <button
-              onClick={cancelEdit}
-              className={`${editButton} text-red-600`}
-              aria-label="Cancel editing"
-            >
-              <X className="w-4 h-4" /> {/* Cancel icon */}
-            </button>
-          </div>
-        ) : (
-          <div className="flex-1 min-w-0 group">
-            <p
-              onClick={() => startEditing(todo.id, todo.text)}
-              className={`${todo.completed ? todoTextCompleted : todoTextActive} cursor-pointer`}
-            >
-              {todo.text}
-            </p>
-            <p className={todoMeta}>
-              Created: {formatDate(todo.createdAt)}
-              {todo.completedAt && <> • Completed: {formatDate(todo.completedAt)}</>}
-            </p>
-          </div>
-        )}
-
-        {editingId !== todo.id && ( // Show edit button if not editing
-          <button
-            onClick={() => startEditing(todo.id, todo.text)}
-            className={someStyles.EditBtn}
-            title="Edit task"
-          >
-            <Edit2 className="w-4 h-4" />
-          </button>
-        )}
-
-        <button
-          onClick={() => deleteTodo(todo.id)}
-          className={deleteButton}
-          aria-label="Delete todo"
-        >
-          <Trash2 className="w-5 h-5" />
-        </button>
-      </div>
+        todo={todo}
+        isEditing={editingId === todo.id}
+        editText={editText}
+        isAnimating={animatingIds.has(todo.id)}
+        isDeleting={deletingIds.has(todo.id)}
+        onToggle={toggleTodo}
+        onDelete={deleteTodo}
+        onStartEdit={startEditing}
+        onSaveEdit={saveEdit}
+        onCancelEdit={cancelEdit}
+        onEditTextChange={setEditText}
+        onEditKeyDown={handleEditKeyDown}
+        editRef={editRef}
+        formatDate={formatDate}
+      />
     );
   };
 
   const renderFilterTabs = () => // Tabs for filter switching
     todos.length > 0 && (
-      <div className={filterTabsRow}>
-        {(['all', 'active', 'completed'] as const).map((option) => (
-          <button
-            key={option}
-            onClick={() => setFilter(option)}
-            className={filter === option ? filterTabActive : filterTabInactive}
-          >
-            {option[0].toUpperCase() + option.slice(1)} {/* Capitalized label */}
-            {option === 'active' && activeCount > 0 && (
-              <span className={filterTabActiveCount}>{activeCount}</span>
-            )}
-            {option === 'completed' && completedCount > 0 && (
-              <span className={filterTabCompletedCount}>{completedCount}</span>
-            )}
-          </button>
-        ))}
+      <div className="px-3 sm:px-6 py-3 border-b border-gray-200 bg-white dark:bg-slate-800 dark:border-slate-600">
+        <div className="flex rounded-lg bg-gray-100 p-1 dark:bg-slate-700">
+          {(['all', 'active', 'completed'] as const).map((option) => (
+            <button
+              key={option}
+              onClick={() => setFilter(option)}
+              className={`
+                flex-1 px-2 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-md transition-colors
+                ${filter === option 
+                  ? 'bg-white text-gray-900 shadow-sm dark:bg-slate-600 dark:text-white' 
+                  : 'text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white'
+                }
+              `}
+            >
+              <span className="capitalize">{option}</span>
+            </button>
+          ))}
+        </div>
       </div>
     );
 
   return ( // Render main UI
-    <div className={screenBg}>
-      <div className={mainContainer}>
-        <div className={`${card} animate-fade-in`}>
-          <div className={headerRow}>
-            <div>
-              <h1 className={headerTitle}>Hello, {userName}! 👋</h1>
-              <p className={headerStats}>
-                <Calendar className="w-4 h-4" />
-                {activeCount} active, {completedCount} completed • {todos.length} total
-              </p>
+    <div className={styles.mainContainer}>
+      <div className={styles.contentWrapper}>
+        <div className={styles.todoContainer}>
+          {/* Header */}
+          <div className={styles.headerContainer}>
+            <div className={styles.headerContent}>
+              <h1 className={styles.welcomeTitle}>
+                Welcome back, {userName}!
+              </h1>
+              <button
+                onClick={onResetApp}
+                className={styles.resetButton}
+              >
+                <RotateCcw className={styles.resetIcon} />
+                <span className={styles.resetTextLarge}>Reset App</span>
+                <span className={styles.resetTextSmall}>Reset</span>
+              </button>
             </div>
-            <button onClick={onResetApp} className={resetButton}>
-              <RotateCcw className="w-4 h-4" /> Reset App
-            </button>
+
+            {/* Add Todo Form */}
+            <form onSubmit={(e) => addTodo(e)} className={styles.addTodoForm}>
+              <div className={styles.inputGroup}>
+                <input
+                  type="text"
+                  value={newTodo}
+                  onChange={(e) => setNewTodo(e.target.value)}
+                  placeholder="What needs to be done?"
+                  className={styles.todoInput}
+                  disabled={isLoading}
+                />
+                <button
+                  type="submit"
+                  disabled={!newTodo.trim() || isLoading}
+                  className={styles.addButton}
+                >
+                  <Plus className={styles.addButtonIcon} />
+                  <span className={styles.addButtonTextLarge}>Add Task</span>
+                  <span className={styles.addButtonTextSmall}>Add</span>
+                </button>
+              </div>
+            </form>
           </div>
 
-          <div className={addInputRow}>
-            <input
-              type="text"
-              value={newTodo}
-              onChange={(e) => setNewTodo(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && addTodo()}
-              placeholder="What needs to be done?"
-              className={addInput}
-            />
-            <button
-              onClick={addTodo}
-              disabled={!newTodo.trim()}
-              className={addButton}
-            >
-              <Plus className="w-5 h-5" /> Add Task
-            </button>
-          </div>
-
+          {/* Filter Tabs */}
           {renderFilterTabs()}
 
-          <div className={todoList}>
+          {/* Todo List */}
+          <div className={styles.todoListContainer}>
             {filteredTodos.length === 0 ? (
-              <div className="text-center py-12 text-gray-500 animate-fade-in">
+              <div className={styles.emptyStateContainer}>
                 {renderEmptyState()}
               </div>
             ) : (
-              filteredTodos.map(renderTodoItem)
+              filteredTodos.map((todo) => renderTodoItem(todo))
             )}
           </div>
 
+          {/* Footer Actions */}
           {completedCount > 0 && (
-            <div className={footerActions}>
-              <p className={footerText}>
-                You've completed {completedCount} task
-                {completedCount !== 1 ? 's' : ''}! 🎉
-              </p>
-              <button onClick={clearCompleted} className={footerClearButton}>
+            <div className={styles.footerContainer}>
+              <button 
+                onClick={clearCompleted} 
+                className={styles.clearCompletedButton}
+              >
                 Clear Completed
               </button>
             </div>
           )}
-        </div>
-
-        <div className={storageInfo}>
-          <p className="text-xs text-gray-400 opacity-75">
-            💾 All data is automatically saved
-          </p>
         </div>
       </div>
     </div>

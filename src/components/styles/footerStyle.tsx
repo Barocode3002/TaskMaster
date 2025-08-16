@@ -1,5 +1,5 @@
-export const footerStyle = "bg-red-100 text-center py-4";
-export const footerText = "text-gray-600 text-sm";
-export const footerYear = "font-semibold";
-export const socialIcons = "flex justify-center gap-4 mt-2";
-export const socialIcon = "text-gray-600 hover:text-red-700 transition-colors";
+// Footer Styles
+export const footerContainer = "py-4 px-4 text-center dark:bg-stone-800";
+export const copyrightText = "text-xs text-gray-400 mb-2 dark:text-stone-400";
+export const socialLinksContainer = "flex justify-center space-x-4";
+export const socialLink = "text-gray-400 hover:text-gray-600 transition-colors duration-200 text-lg dark:text-stone-400 dark:hover:text-stone-300";

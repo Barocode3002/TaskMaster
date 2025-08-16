@@ -1,23 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { User, Check, CheckCircle2 } from 'lucide-react';
-import {
-  screenBgReturning,
-  cardReturning,
-  avatarReturning,
-  spinnerReturning,
-  screenBg,
-  card,
-  avatar,
-  heading,
-  subheading,
-  label,
-  input,
-  savedNameBox,
-  successBox,
-  buttonSave,
-  buttonClear,
-  infoFooter
-} from './styles/nameInputStyle';
+import { CheckCircle2, User, Check } from 'lucide-react';
+import * as styles from './styles/nameInputStyle';
 
 interface NameInputScreenProps {
   onNameSaved?: (name: string) => void;
@@ -95,33 +78,35 @@ function NameInputScreen({ onNameSaved, onNavigateToTodos }: NameInputScreenProp
   // Show different content for returning users
   if (isReturningUser) {
     return (
-      <div className={screenBgReturning}>
-        <div className={cardReturning}>
-          <div className={avatarReturning}>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 dark:bg-gray-900">
+        <div className={styles.cardContainer}>
+          <div className={styles.inputIconContainer}>
             <CheckCircle2 className="w-8 h-8 text-green-600" />
           </div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Welcome back, {savedName}!</h1>
-          <p className="text-gray-600 mb-6">Taking you to your todos...</p>
-          <div className={spinnerReturning}></div>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2 dark:text-white">Welcome back, {savedName}!</h1>
+          <p className="text-gray-600 mb-6 dark:text-gray-400">Taking you to your todos...</p>
+          <div className={styles.inputContainer}>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto"></div>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className={screenBg}>
-      <div className={card}>
-        <div className="text-center mb-8">
-          <div className={avatar}>
-            <User className="w-8 h-8 text-red-600" />
+    <div className={styles.mainContainer}>
+      <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md dark:bg-gray-800">
+        <div className={styles.headerSection}>
+          <div className={styles.iconContainer}>
+            <User className={styles.headerIcon} />
           </div>
-          <h1 className={heading}>Welcome to Todo App</h1>
-          <p className={subheading}>Let's start by getting to know you</p>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2 dark:text-white">Welcome to TaskMaster</h1>
+          <p className="text-gray-600 dark:text-gray-400">Let's start by getting to know you</p>
         </div>
 
-        <div className="space-y-6">
+        <div className={styles.formSection}>
           <div>
-            <label htmlFor="userName" className={label}>
+            <label htmlFor="userName" className="block text-sm font-medium text-gray-700 mb-2 dark:text-gray-300">
               What's your name?
             </label>
             <input
@@ -131,22 +116,22 @@ function NameInputScreen({ onNameSaved, onNavigateToTodos }: NameInputScreenProp
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder="Enter your name..."
-              className={input}
+              className={styles.nameInput}
               disabled={isLoading}
             />
           </div>
 
           {savedName && !showSuccess && !isReturningUser && (
-            <div className={savedNameBox}>
-              <p className="text-green-800 text-sm">
+            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 dark:bg-gray-700 dark:border-gray-600">
+              <p className={styles.welcomeSubtitle}>
                 <strong>Current saved name:</strong> {savedName}
               </p>
             </div>
           )}
 
           {showSuccess && (
-            <div className={successBox}>
-              <Check className="w-5 h-5 text-green-600 mr-2" />
+            <div className="bg-green-100 border border-green-300 rounded-lg p-4 flex items-center">
+              <Check className={styles.saveButtonIcon} />
               <p className="text-green-800 font-medium">Name saved! Redirecting to todos...</p>
             </div>
           )}
@@ -155,7 +140,7 @@ function NameInputScreen({ onNameSaved, onNavigateToTodos }: NameInputScreenProp
             <button
               onClick={handleSaveName}
               disabled={!name.trim() || isLoading}
-              className={buttonSave}
+              className="flex-1 bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors font-medium dark:bg-blue-600 dark:hover:bg-blue-700"
             >
               {isLoading ? 'Saving...' : 'Save Name'}
             </button>
@@ -164,7 +149,7 @@ function NameInputScreen({ onNameSaved, onNavigateToTodos }: NameInputScreenProp
               <button
                 onClick={handleClearName}
                 disabled={isLoading}
-                className={buttonClear}
+                className="px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
               >
                 Clear
               </button>
@@ -173,7 +158,7 @@ function NameInputScreen({ onNameSaved, onNavigateToTodos }: NameInputScreenProp
         </div>
 
         <div className="mt-8 pt-6 border-t border-gray-200">
-          <p className={infoFooter}>
+          <p className="text-xs text-gray-500 text-center dark:text-gray-400">
             Your name will be stored locally on your device
           </p>
         </div>

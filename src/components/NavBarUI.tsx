@@ -3,12 +3,13 @@ import {
   getRecentlyDeletedTodos,
   clearRecentlyDeletedTodos,
   restoreDeletedTodo,
-  permanentlyDeleteTodo, // fix: correct function name
+  permanentlyDeleteTodo,
   getDeletedTodosCount,
   type DeletedTodo
 } from "../utils/recentlyDeletedStorage";
 import { type Todo } from "../utils/types";
-import { RotateCcw, Trash2, Clock, X } from 'lucide-react';
+import { Trash2, Clock, X } from 'lucide-react';
+import * as styles from './styles/navBarStyle';
 
 interface NavBarUIProps {
   onRestoreTodo?: (todo: Todo) => void;
@@ -51,6 +52,28 @@ function NavBarUI({ onRestoreTodo }: NavBarUIProps = {}) {
       }
     }
   };
+
+  const handleRestoreAll = () => {
+    if (window.confirm('Restore all recently deleted todos?')) {
+      const todosToRestore = [...deletedTodos]; // Create a copy to avoid mutation during iteration
+      let restoredCount = 0;
+      
+      todosToRestore.forEach(deletedTodo => {
+        const result = restoreDeletedTodo(deletedTodo);
+        if (result.success && result.todo && onRestoreTodo) {
+          onRestoreTodo(result.todo);
+          restoredCount++;
+        }
+      });
+      
+      loadDeletedTodos(); // Refresh the list
+      
+      if (restoredCount > 0) {
+        alert(`Successfully restored ${restoredCount} todo${restoredCount === 1 ? '' : 's'}`);
+      }
+    }
+  }
+
 
   // Permanently delete a specific todo
   const handlePermanentDelete = (todoId: number) => {
@@ -115,18 +138,19 @@ function NavBarUI({ onRestoreTodo }: NavBarUIProps = {}) {
   }, [showDeletedLog]);
 
   return (
-    <nav className="bg-red-700 text-white px-6 py-4 flex justify-between items-center shadow-lg">
-      <div className="text-2xl font-bold tracking-wide">
+    <nav className={styles.navBarContainer}>
+      <div className={styles.appName}>
         TaskMaster
       </div>
-      <div className="flex gap-4 items-center">
+      <div className={styles.navBarButtonContainer}>
         <button
           onClick={openDeletedLog}
-          className="bg-white text-red-700 px-4 py-2 rounded hover:bg-red-100 font-medium relative"
+          className={styles.deletedButton}
         >
-          Recently Deleted
+          <span className={styles.deletedButtonTextLarge}>Recently Deleted</span>
+          <span className={styles.deletedButtonTextSmall}>Deleted</span>
           {deletedCount > 0 && (
-            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+            <span className={styles.deletedCountBadge}>
               {deletedCount > 99 ? '99+' : deletedCount}
             </span>
           )}
@@ -134,38 +158,39 @@ function NavBarUI({ onRestoreTodo }: NavBarUIProps = {}) {
       </div>
       
       {showDeletedLog && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[80vh] overflow-hidden">
+        <div className={styles.modalOverlay}>
+          <div className={styles.modalContainer}>
             {/* Header */}
-            <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between bg-red-50">
-              <h2 className="text-xl font-bold text-red-700 flex items-center gap-2">
-                <Trash2 className="w-5 h-5" />
-                Recently Deleted Todos ({deletedTodos.length})
+            <div className={styles.modalHeader}>
+              <h2 className={styles.modalTitle}>
+                <Trash2 className={styles.modalTitleIcon} />
+                <span className={styles.modalTitleTextLarge}>Recently Deleted Todos ({deletedTodos.length})</span>
+                <span className={styles.modalTitleTextSmall}>Deleted ({deletedTodos.length})</span>
               </h2>
               <button
                 onClick={() => setShowDeletedLog(false)}
-                className="text-gray-500 hover:text-gray-700 p-1"
+                className={styles.modalCloseButton}
               >
-                <X className="w-5 h-5" />
+                <X className={styles.modalCloseIcon} />
               </button>
             </div>
 
             {/* Content */}
-            <div className="p-6 overflow-y-auto max-h-[60vh]">
+            <div className={styles.modalContent}>
               {deletedTodos.length === 0 ? (
-                <div className="text-center py-8">
-                  <div className="text-4xl mb-3">🗑️</div>
-                  <p className="text-gray-500 text-lg">No recently deleted todos</p>
-                  <p className="text-sm text-gray-400 mt-2">
+                <div className={styles.emptyStateContainer}>
+                  <div className={styles.emptyStateIcon}>🗑️</div>
+                  <p className={styles.emptyStateText}>No recently deleted todos</p>
+                  <p className={styles.emptyStateSubtext}>
                     Deleted todos are automatically removed after 7 days
                   </p>
                 </div>
               ) : (
-                <div className="space-y-3">
+                <div className={styles.todosList}>
                   {/* Info banner */}
-                  <div className="bg-blue-50 border border-blue-200 rounded-md p-3 text-sm text-blue-800 flex items-center gap-2">
-                    <Clock className="w-4 h-4" />
-                    Todos are automatically removed after 7 days
+                  <div className={styles.infoBanner}>
+                    <Clock className={styles.infoBannerIcon} />
+                    <span className={styles.infoBannerText}>Auto-removed after 7 days</span>
                   </div>
 
                   {/* Deleted todos list */}
@@ -175,31 +200,31 @@ function NavBarUI({ onRestoreTodo }: NavBarUIProps = {}) {
                     return (
                       <div
                         key={todo.id}
-                        className="border border-gray-200 rounded-lg p-4 bg-gray-50 hover:bg-gray-100 transition-colors"
+                        className={styles.todoItem}
                       >
-                        <div className="flex items-start justify-between gap-3">
-                          <div className="flex-1 min-w-0">
+                        <div className={styles.todoItemContent}>
+                          <div className={styles.todoItemText}>
                             {/* Todo text */}
-                            <p className="font-medium text-gray-700 line-through mb-2">
+                            <p className={styles.todoText}>
                               {todo.text}
                             </p>
                             
                             {/* Metadata */}
-                            <div className="text-sm text-gray-500 space-y-1">
-                              <div className="flex items-center gap-4 flex-wrap">
-                                <span>Created: {new Date(todo.createdAt).toLocaleDateString()}</span>
-                                <span className="font-medium">
+                            <div className={styles.todoMetadata}>
+                              <div className={styles.todoMetadataRow}>
+                                <span className={styles.todoCreatedText}>Created: {new Date(todo.createdAt).toLocaleDateString()}</span>
+                                <span className={styles.todoDeletedText}>
                                   Deleted: {formatDeletionTime(todo.deletedAt)}
                                 </span>
                               </div>
                               
-                              <div className="text-xs">
+                              <div className={styles.todoExpiryText}>
                                 {daysLeft > 0 ? (
-                                  <span className="text-orange-600 font-medium">
+                                  <span className={styles.todoExpiryActive}>
                                     Expires in {daysLeft} day{daysLeft === 1 ? '' : 's'}
                                   </span>
                                 ) : (
-                                  <span className="text-red-600 font-medium">
+                                  <span className={styles.todoExpiryToday}>
                                     Expires today
                                   </span>
                                 )}
@@ -208,23 +233,23 @@ function NavBarUI({ onRestoreTodo }: NavBarUIProps = {}) {
                           </div>
 
                           {/* Action buttons */}
-                          <div className="flex items-center gap-2 flex-shrink-0">
-                            <button
-                              onClick={() => handleRestore(todo)}
-                              className="px-3 py-1 text-sm bg-green-100 text-green-700 hover:bg-green-200 rounded-md transition-colors flex items-center gap-1"
-                              title="Restore todo"
-                            >
-                              <RotateCcw className="w-3 h-3" />
-                              Restore
-                            </button>
-                            
+                          <div className={styles.actionButtonsContainer}>
+                            <div className={styles.restoreButtonContainer}>
+                              <button
+                                onClick={() => handleRestore(todo)}
+                                className={styles.restoreButton}
+                              >
+                                <span className={styles.restoreButtonTextLarge}>Restore</span>
+                                <span className={styles.restoreButtonTextSmall}>↻</span>
+                              </button>
+                            </div>
                             <button
                               onClick={() => handlePermanentDelete(todo.id)}
-                              className="px-3 py-1 text-sm bg-red-100 text-red-700 hover:bg-red-200 rounded-md transition-colors flex items-center gap-1"
+                              className={styles.deleteButton}
                               title="Delete permanently"
                             >
-                              <Trash2 className="w-3 h-3" />
-                              Delete
+                              <Trash2 className={styles.deleteButtonIcon} />
+                              <span className={styles.deleteButtonText}>Delete</span>
                             </button>
                           </div>
                         </div>
@@ -236,8 +261,8 @@ function NavBarUI({ onRestoreTodo }: NavBarUIProps = {}) {
             </div>
 
             {/* Footer */}
-            <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-between items-center">
-              <div className="text-sm text-gray-600">
+            <div className={styles.modalFooter}>
+              <div className={styles.modalFooterText}>
                 {deletedTodos.length > 0 && (
                   <span>
                     {deletedTodos.length} todo{deletedTodos.length === 1 ? '' : 's'} in recently deleted
@@ -245,18 +270,27 @@ function NavBarUI({ onRestoreTodo }: NavBarUIProps = {}) {
                 )}
               </div>
               
-              <div className="flex gap-2">
+              <div className={styles.modalFooterActions}>
+                {deletedTodos.length > 0 && (
+                  <button
+                    onClick={handleRestoreAll}
+                    className={styles.restoreAllButton}
+                  >
+                    Restore All
+                  </button>
+                )}
                 {deletedTodos.length > 0 && (
                   <button
                     onClick={handleClearLog}
-                    className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+                    className={styles.clearAllButton}
                   >
-                    Clear All
+                    <span className={styles.clearAllButtonTextLarge}>Clear All</span>
+                    <span className={styles.clearAllButtonTextSmall}>Clear</span>
                   </button>
                 )}
                 <button
                   onClick={() => setShowDeletedLog(false)}
-                  className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors"
+                  className={styles.closeButton}
                 >
                   Close
                 </button>

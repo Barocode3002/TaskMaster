@@ -1,58 +1,84 @@
 @import "tailwindcss";
 
-/* @keyframes swipe-down {
-  0% { transform: translateY(-40px); opacity: 0; }
-  100% { transform: translateY(0); opacity: 1; }
-}
-.animate-swipe-down {
-  animation: swipe-down 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-}
-@keyframes swipe-up {
-  0% { transform: translateY(40px); opacity: 0; }
-  100% { transform: translateY(0); opacity: 1; }
-}
-.animate-swipe-up {
-  animation: swipe-up 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+/* Dark mode base styles */
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8fafc;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --border-color: #e2e8f0;
 }
 
+.dark {
+  --bg-primary: #171a21;
+  --bg-secondary: #0c1118;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --border-color: #334155;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Custom disabled cursor with emoji */
+.disabled-cursor {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><text y="18" font-size="18">🚫</text></svg>') 12 12, not-allowed;
+}
+
+/* Mobile-optimized animations and utilities */
 @keyframes fade-in {
-                    from { opacity: 0; transform: translateY(10px); }
-                    to { opacity: 1; transform: translateY(0); }
-                }
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
-                @keyframes fade-out {
-                    from { opacity: 1; transform: scale(1); }
-                    to { opacity: 0; transform: scale(0.95); }
-                }
+@keyframes fade-out {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(0.95); }
+}
 
-                @keyframes swipe-down {
-                    0% { transform: translateY(0) scale(1); }
-                    25% { transform: translateY(-5px) scale(1.02); }
-                    50% { transform: translateY(10px) scale(0.98); }
-                    75% { transform: translateY(-2px) scale(1.01); }
-                    100% { transform: translateY(0) scale(1); }
-                }
+@keyframes subtle-scale {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
 
-                @keyframes swipe-up {
-                    0% { transform: translateY(0) scale(1); }
-                    25% { transform: translateY(5px) scale(1.02); }
-                    50% { transform: translateY(-10px) scale(0.98); }
-                    75% { transform: translateY(2px) scale(1.01); }
-                    100% { transform: translateY(0) scale(1); }
-                }
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
 
-                .animate-fade-in {
-                    animation: fade-in 0.3s ease-out;
-                }
+.animate-fade-out {
+  animation: fade-out 0.3s ease-in forwards;
+}
 
-                .animate-fade-out {
-                    animation: fade-out 0.3s ease-in forwards;
-                }
+.animate-subtle-scale {
+  animation: subtle-scale 0.3s ease-out;
+}
 
-                .animate-swipe-down {
-                    animation: swipe-down 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-                }
+/* Touch-friendly mobile optimizations */
+@media (max-width: 640px) {
+  /* Ensure touch targets are at least 44px */
+  button, input, [role="button"] {
+    min-height: 44px;
+  }
+  
+  /* Prevent zoom on input focus */
+  input, textarea, select {
+    font-size: 16px;
+  }
+  
+  /* Smooth scrolling for mobile */
+  * {
+    -webkit-overflow-scrolling: touch;
+  }
+}
 
-                .animate-swipe-up {
-                    animation: swipe-up 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-                } */
+/* Prevent text selection during swipe gestures */
+.no-select {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}

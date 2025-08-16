@@ -5,6 +5,7 @@ import NameInputScreen from './components/NameInputUI';
 import TodoUI from './components/TodoUI';
 import NavBarUI from './components/NavBarUI';
 import Footer from './components/Footer';
+import { ThemeProvider } from './contexts/ThemeContext';
 
 function App() {
   const [currentScreen, setCurrentScreen] = useState<AppScreen>('name');
@@ -95,24 +96,26 @@ function App() {
   }
 
   return (
-    <div className="app-container">
-      <NavBarUI onRestoreTodo={handleRestoreTodo} />
-      {currentScreen === 'name' && (
-        <NameInputScreen
-          onNameSaved={handleNameSaved}
-          onNavigateToTodos={handleNavigateToTodos}
-        />
-      )}
-      
-      {currentScreen === 'todos' && (
-        <TodoUI
-          userName={userName}
-          onResetApp={handleResetApp}
-          onRestoreTodo={handleSetRestoreFunction}
-        />
-      )}
-      <Footer />
-    </div>
+    <ThemeProvider>
+      <div className="min-h-screen bg-gradient-to-br from-red-50 to-red-100 dark:bg-slate-900 transition-colors duration-300">
+        <NavBarUI onRestoreTodo={handleRestoreTodo} />
+        {currentScreen === 'name' && (
+          <NameInputScreen
+            onNameSaved={handleNameSaved}
+            onNavigateToTodos={handleNavigateToTodos}
+          />
+        )}
+        
+        {currentScreen === 'todos' && (
+          <TodoUI
+            userName={userName}
+            onResetApp={handleResetApp}
+            onRestoreTodo={handleSetRestoreFunction}
+          />
+        )}
+        <Footer />
+      </div>
+    </ThemeProvider>
   );
 }
 
