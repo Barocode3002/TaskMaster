@@ -16,7 +16,7 @@ const Footer = () => {
                 <a href="https://linkedin.com/in/mohssenmbarokha" className={styles.socialLink}><FaLinkedin /></a>
             </div>
             <div className='m-2 hover:text-red-500 cursor-pointer'>
-            <a href="https://github.com/Barocode3002/TaskMaster"><FaCodeMerge /><code>source code</code></a>
+            <a href="https://github.com/Barocode3002/TaskMaster"><FaCodeMerge />source code</a>
             </div>
         </footer>
     );
