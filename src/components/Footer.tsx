@@ -1,5 +1,5 @@
 import * as styles from './styles/footerStyle';
-import { FaGithub, FaInstagram, FaLinkedin, FaCodeMerge } from "react-icons/fa";
+import { FaGithub, FaInstagram, FaLinkedin } from "react-icons/fa";
 import { TiSocialFacebookCircular } from "react-icons/ti";
 
 
@@ -16,7 +16,7 @@ const Footer = () => {
                 <a href="https://linkedin.com/in/mohssenmbarokha" className={styles.socialLink}><FaLinkedin /></a>
             </div>
             <div className='m-2 hover:text-red-500 cursor-pointer'>
-            <a href="https://github.com/Barocode3002/TaskMaster"><FaCodeMerge />source code</a>
+            <a href="https://github.com/Barocode3002/TaskMaster">source code</a>
             </div>
         </footer>
     );
